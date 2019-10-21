@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/Menu_localInfo"
+        app:showAsAction="never"
+        android:title="查看详情"/>
+    <item
+        android:id="@+id/Menu_deleteLocal"
+        app:showAsAction="never"
+        android:title="删除"/>
+</menu>

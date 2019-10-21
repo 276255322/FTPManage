@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:viewportWidth="1000"
+    android:viewportHeight="1000" android:width="24dp" android:height="24dp">
+    <group android:scaleX="0.1" android:scaleY="-0.1" android:translateY="511"
+        android:translateX="0">
+        <path android:fillColor="#FF000000"
+            android:pathData="M105.1 409.4l7.7-3580.6l63.8-127.6c79.1-163.3 232.2-316.5 395.6-395.6l127.6-63.8l4096.1-7.6c2728.2-5.1 4136.9 2.5 4218.6 20.4c301.2 63.8 610 296 742.7 556.3c148 290.9 142.9 181.2 142.9 3187.5v2763.9h-510.4h-510.4v612.5v612.5H4489.6H100L105.1 409.4z M8470.8 108.2v-3470.8l-3851.1 5.1c-3846 7.6-3853.6 7.6-3922.5 61.2c-38.3 28.1-94.4 84.2-122.5 122.5c-53.6 68.9-53.6 81.6-61.2 3412.1L508.3 3579h3981.2h3981.2V108.2z M9491.6-192.9c0-2187.1-5.1-2567.4-38.3-2677.1c-63.8-216.9-283.3-423.6-502.8-477.2l-71.5-15.3v2858.3V2354h306.3h306.3V-192.9z" />
+        <path android:fillColor="#FF000000"
+            android:pathData="M1120.8 1741.5V312.4h1225h1225v1429.2v1429.2h-1225h-1225V1741.5z M3162.5 1741.5V720.7h-816.7h-816.7v1020.8v1020.8h816.7h816.7V1741.5z" />
+        <path android:fillColor="#FF000000"
+            android:pathData="M4387.5 2966.5v-204.2h1633.3h1633.3v204.2v204.2H6020.8H4387.5V2966.5z" />
+        <path android:fillColor="#FF000000"
+            android:pathData="M4387.5 1741.5v-204.2h1633.3h1633.3v204.2v204.2H6020.8H4387.5V1741.5z" />
+        <path android:fillColor="#FF000000"
+            android:pathData="M4387.5 516.6V312.4h1633.3h1633.3v204.2v204.2H6020.8H4387.5V516.6z" />
+        <path android:fillColor="#FF000000"
+            android:pathData="M1120.8-708.4v-204.2h3266.7h3266.7v204.2v204.2H4387.5H1120.8V-708.4z" />
+        <path android:fillColor="#FF000000"
+            android:pathData="M1120.8-1729.3v-204.2h3266.7h3266.7v204.2v204.2H4387.5H1120.8V-1729.3z" />
+        <path android:fillColor="#FF000000"
+            android:pathData="M1120.8-2750.1v-204.2h3266.7h3266.7v204.2v204.2H4387.5H1120.8V-2750.1z" />
+    </group>
+</vector>

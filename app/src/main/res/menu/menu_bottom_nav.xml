@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/Menu_bottom_ftp"
+        android:title="FTP管理"/>
+
+    <item
+        android:id="@+id/i_empty"
+        android:title="" />
+
+    <item
+        android:id="@+id/Menu_bottom_local"
+        android:title="本地游览"/>
+</menu>

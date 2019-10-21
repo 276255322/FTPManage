@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.ftpmanage.FolderActivity">
+    <item
+        android:id="@+id/Menu_Long_DownloadLocal"
+        app:showAsAction="never"
+        android:title="下载到本地"/>
+    <item
+        android:id="@+id/Menu_Long_DeleteFtp"
+        app:showAsAction="never"
+        android:title="删除FTP文件"/>
+</menu>
