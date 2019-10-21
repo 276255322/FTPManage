@@ -1,5 +1,6 @@
 package com.example.ftpmanage.ui;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -90,5 +91,9 @@ public class Ftp_Fragments extends Fragment {
             fragment.setFtpConfig(ftpPath, ftpConfigId);
         }
         transaction.commit();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
     }
 }

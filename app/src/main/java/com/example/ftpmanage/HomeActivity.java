@@ -144,7 +144,7 @@ public class HomeActivity extends AppCompatActivity {
             item1.setIcon(svg_ftp_server);
             MenuItem item2 = bnve.getMenu().findItem(R.id.Menu_bottom_local);
             item2.setIcon(svg_folder);
-        } else if(selIndex == 1) {
+        } else if (selIndex == 1) {
             VectorDrawableCompat svg_ftp_server = VectorDrawableCompat.create(getResources(), R.drawable.svg_ftp_server_24dp_c, getTheme());
             VectorDrawableCompat svg_folder = VectorDrawableCompat.create(getResources(), R.drawable.svg_folder_24dp, getTheme());
             MenuItem item1 = bnve.getMenu().findItem(R.id.Menu_bottom_ftp);
@@ -156,6 +156,33 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode,resultCode,data);
+        super.onActivityResult(requestCode, resultCode, data);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        for (int indext = 0; indext < fragmentManager.getFragments().size(); indext++) {
+            Fragment fragment = fragmentManager.getFragments().get(indext);
+            if (fragment != null) {
+                handleResult(fragment, requestCode, resultCode, data);
+            }
+        }
+    }
+
+    /**
+     * 递归调用，对所有的子Fragment生效
+     *
+     * @param fragment
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    private void handleResult(Fragment fragment, int requestCode, int resultCode, Intent data) {
+        fragment.onActivityResult(requestCode, resultCode, data);
+        List<Fragment> childFragment = fragment.getChildFragmentManager().getFragments();
+        if (childFragment != null) {
+            for (Fragment f : childFragment) {
+                if (f != null) {
+                    handleResult(f, requestCode, resultCode, data);
+                }
+            }
+        }
     }
 }

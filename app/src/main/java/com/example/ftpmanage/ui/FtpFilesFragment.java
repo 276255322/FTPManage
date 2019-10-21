@@ -87,7 +87,10 @@ public class FtpFilesFragment extends Fragment implements FragmentBackHandler {
 
     private String localSaveDir = "";
 
+    private ArrayList<String> upFileList = new ArrayList<>();
+
     public static boolean isFirst = true;
+
 
     public FtpFilesFragment(SQLiteDatabase db) {
         this.db = db;
@@ -380,15 +383,19 @@ public class FtpFilesFragment extends Fragment implements FragmentBackHandler {
         downAllImages();
     }
 
+    private void cancelProgressDialog() {
+        if (pd != null) {
+            pd.cancel();
+        }
+        if (hpd != null) {
+            hpd.cancel();
+        }
+    }
+
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            if (pd != null) {
-                pd.cancel();
-            }
-            if (hpd != null) {
-                hpd.cancel();
-            }
+            cancelProgressDialog();
             Bundle data = msg.getData();
             if (msg.what == 1) {
                 FtpDirList fflist = (FtpDirList) data.getSerializable("FTPFiles");
@@ -411,6 +418,9 @@ public class FtpFilesFragment extends Fragment implements FragmentBackHandler {
             } else if (msg.what == 5) {
                 String infoMessage = data.getString("infoMessage");
                 UiUtil.showPosition(appCompatActivity, infoMessage);
+            } else if (msg.what == 6) {
+                String infoMessage = data.getString("infoMessage");
+                startUploadFTP(infoMessage);
             } else if (msg.what == 9999) {
                 String errMessage = data.getString("errMessage");
                 UiUtil.showPosition(appCompatActivity, errMessage);
@@ -432,13 +442,19 @@ public class FtpFilesFragment extends Fragment implements FragmentBackHandler {
                 UiUtil.sleep(100);
                 Message msg = new Message();
                 Bundle data = new Bundle();
-                boolean isDel = FTPClientEntity.deleteFile(ftpPath, ffext.getName());
+                FTPClientEntity.deleteFile(ftpPath, ffext.getName());
+                boolean isErr = false;
                 if (FTPClientEntity.client.isErr()) {
-                    msg.what = 9999;
-                    data.putString("errMessage", FTPClientEntity.client.getErrMessage());
-                    msg.setData(data);
-                    handler.sendMessage(msg);
-                } else if (isDel) {
+                    String err = FTPClientEntity.client.getErrMessage();
+                    if (!AppUtil.isIndexOf(err, "The system cannot find the file specified")) {
+                        isErr = true;
+                        msg.what = 9999;
+                        data.putString("errMessage", err);
+                        msg.setData(data);
+                        handler.sendMessage(msg);
+                    }
+                }
+                if (!isErr) {
                     if (ffext.isDown()) {
                         File f = new File(ffext.getLocalPath());
                         FileProvider.deleteFile(f);
@@ -520,17 +536,29 @@ public class FtpFilesFragment extends Fragment implements FragmentBackHandler {
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, @Nullable final Intent data) {
         if (resultCode == Activity.RESULT_OK && requestCode == DefaultSelectorActivity.FILE_SELECT_REQUEST_CODE) {
-            ArrayList<String> list = DefaultSelectorActivity.getDataFromIntent(data);
-            if (list != null && list.size() > 0) {
-                for (int i = 0; i < list.size(); i++) {
-                    String selPath = list.get(i);
-                    uploadFTP(selPath);
-                }
-            }
+            upFileList.clear();
+            upFileList = DefaultSelectorActivity.getDataFromIntent(data);
+            uploadFTP();
         }
     }
 
-    public void uploadFTP(final String filePath) {
+    private void startUploadFTP(String mess) {
+        UiUtil.showToast(appCompatActivity, mess);
+        if (upFileList.size() > 0) {
+            FtpLock.setUnLock();
+            uploadFTP();
+        } else {
+            setFTPFileExtList(pathList.size() - 1, "");
+            loadFTPFileList();
+        }
+    }
+
+    public void uploadFTP() {
+        if (upFileList.size() < 1) {
+            return;
+        }
+        final int index = upFileList.size() - 1;
+        final String filePath = upFileList.get(index);
         final File file = new File(filePath);
         ftpListener = new FTPTransferListener(appCompatActivity, fileHandler, 1, file.length(), 0);
         UiUtil.wakeLockAcquire(m_wklk);
@@ -539,18 +567,16 @@ public class FtpFilesFragment extends Fragment implements FragmentBackHandler {
             public void run() {
                 Message msg = new Message();
                 Bundle data = new Bundle();
-                boolean isDown = FTPClientEntity.upLoadFile(filePath, ftpPath, ftpListener);
+                FTPClientEntity.upLoadFile(filePath, ftpPath, ftpListener);
+                upFileList.remove(upFileList.size() - 1);
+                msg.what = 6;
                 if (FTPClientEntity.client.isErr()) {
-                    msg.what = 9999;
-                    data.putString("errMessage", FTPClientEntity.client.getErrMessage());
-                    msg.setData(data);
-                    handler.sendMessage(msg);
-                } else if (isDown) {
-                    msg.what = 4;
+                    data.putString("infoMessage", FTPClientEntity.client.getErrMessage());
+                } else {
                     data.putString("infoMessage", "文件上传完成，保存位置：" + ftpPath);
-                    msg.setData(data);
-                    handler.sendMessage(msg);
                 }
+                msg.setData(data);
+                handler.sendMessage(msg);
             }
         }).start();
     }
