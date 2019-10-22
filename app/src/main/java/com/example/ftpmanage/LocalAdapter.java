@@ -72,6 +72,7 @@ public class LocalAdapter extends RecyclerView.Adapter<LocalAdapter.ViewHolder> 
                 Glide.with(mContext).load(FtpUtils.getFileIcon(true, true, 0, fname)).into(holder.mImage);
             }
         } else {
+            holder.mTxt.setText(ffile.getChildCount() + "项");
             Glide.with(mContext).load(FtpUtils.getFileIcon(false, true, ffile.getChildCount(), fname)).into(holder.mImage);
         }
         holder.mImage.setOnClickListener(new View.OnClickListener() {
@@ -97,12 +98,14 @@ public class LocalAdapter extends RecyclerView.Adapter<LocalAdapter.ViewHolder> 
 
         public TextView mView;
         public ImageView mImage;
+        public TextView mTxt;
         public FrameLayout linear;
 
         public ViewHolder(View itemView) {
             super(itemView);
             mView = itemView.findViewById(R.id.text_view);
             mImage = itemView.findViewById(R.id.img_list);
+            mTxt = itemView.findViewById(R.id.img_txt);
             linear = itemView.findViewById(R.id.img_linear);
             int jg = UiUtil.dp2px(mContext, 5) * 5 + UiUtil.dp2px(mContext, 20);
             averageLength = (glm.getWidth() - jg) / glm.getSpanCount();
