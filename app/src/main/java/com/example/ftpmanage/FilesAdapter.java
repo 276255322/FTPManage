@@ -20,6 +20,7 @@ import com.example.ftpmanage.utils.AppUtil;
 import com.example.ftpmanage.utils.ConstantUtil;
 import com.example.ftpmanage.utils.FileProvider;
 import com.example.ftpmanage.utils.ImgUtil;
+import com.example.ftpmanage.utils.UiUtil;
 
 import java.io.File;
 import java.util.List;
@@ -110,6 +111,9 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
         String fname = ffext.getName();
         holder.img.setVisibility(View.INVISIBLE);
         boolean isDown = false;
+        ViewGroup.LayoutParams linearParm = holder.linear.getLayoutParams();
+        linearParm.width = averageLength;
+        linearParm.height = averageLength;
         if (ffext.getType() == 0) {
             boolean isLoadImage = false;
             if (AppUtil.isExt(fname, ConstantUtil.IMAGE_SUFFIX_GATHER)) {
@@ -158,7 +162,8 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
             mImage = itemView.findViewById(R.id.img_list);
             linear = itemView.findViewById(R.id.img_linear);
             img = itemView.findViewById(R.id.img_finished);
-            averageLength = glm.getWidth() / glm.getSpanCount();
+            int jg = UiUtil.dp2px(mContext, 5) * 5 + UiUtil.dp2px(mContext, 20);
+            averageLength = (glm.getWidth() - jg) / glm.getSpanCount();
         }
     }
 

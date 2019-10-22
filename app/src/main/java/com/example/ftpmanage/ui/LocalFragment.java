@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ftpmanage.CustomPopup;
+import com.example.ftpmanage.FtpUtils;
 import com.example.ftpmanage.ImageActivity;
 import com.example.ftpmanage.LocalAdapter;
 import com.example.ftpmanage.R;
@@ -109,7 +110,14 @@ public class LocalFragment extends Fragment implements FragmentBackHandler {
             }
         }
         FileExt fi = new FileExt(localDir);
-        return fi.getFileExtList();
+        List<FileExt> feList = fi.getFileExtList();
+        for (int i = 0; i < feList.size(); i++) {
+            FileExt fe = feList.get(i);
+            if (fe.isDirectory() && fe.getChildCount() < 0) {
+                fe.setChildCount(fe.getFileExtList().size());
+            }
+        }
+        return feList;
     }
 
     private void setFileExtList(int index, List<FileExt> fext, String fpath) {
@@ -142,10 +150,22 @@ public class LocalFragment extends Fragment implements FragmentBackHandler {
         if (pathList.size() > 1) {
             UiUtil.setMenuItemVisible(toolbar, R.id.Menu_Local_Return, true);
         }
-        int index = pathList.size() - 1;
-        localDir = pathList.get(index);
-        files = getFileExtList(index);
-        setFileExtList(index, files, localDir);
+        UiUtil.showProgressDialog(pd, "载入中", "载入中,请稍后...");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Message msg = new Message();
+                int index = pathList.size() - 1;
+                localDir = pathList.get(index);
+                files = getFileExtList(index);
+                setFileExtList(index, files, localDir);
+                msg.what = 4;
+                handler.sendMessage(msg);
+            }
+        }).start();
+    }
+
+    public void showFileList() {
         localAdapter = new LocalAdapter(appCompatActivity, mLayoutManager, localDir, files);
         localAdapter.setOnItemClickListener(new LocalAdapter.OnItemClickListener() {
             @Override
@@ -224,7 +244,6 @@ public class LocalFragment extends Fragment implements FragmentBackHandler {
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            pd.cancel();
             Bundle data = msg.getData();
             if (msg.what == 1) {
                 String infoMessage = data.getString("infoMessage");
@@ -245,9 +264,14 @@ public class LocalFragment extends Fragment implements FragmentBackHandler {
             } else if (msg.what == 3) {
                 int position = data.getInt("position");
                 localAdapter.notifyItemChanged(position, new Object());
+            } else if (msg.what == 4) {
+                showFileList();
             } else if (msg.what == 9999) {
                 String errMessage = data.getString("errMessage");
                 UiUtil.showPosition(appCompatActivity, errMessage);
+            }
+            if (pd != null) {
+                pd.hide();
             }
             super.handleMessage(msg);
         }

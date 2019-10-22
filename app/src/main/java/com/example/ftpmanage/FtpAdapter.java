@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.ftpmanage.entity.FtpConfig;
 import com.example.ftpmanage.utils.AppUtil;
+import com.example.ftpmanage.utils.UiUtil;
 
 import java.util.List;
 
@@ -57,6 +58,9 @@ public class FtpAdapter extends RecyclerView.Adapter<FtpAdapter.ViewHolder> {
         final FtpConfig fe = mList.get(position);
         String fname = fe.getFtpName();
         holder.mView.setText(fname);
+        ViewGroup.LayoutParams linearParm = holder.linear.getLayoutParams();
+        linearParm.width = averageLength;
+        linearParm.height = averageLength;
         if (userIcon == 0) {
             Glide.with(mContext).load(R.drawable.sys_ftp_server1).into(holder.mImage);
             userIcon++;
@@ -103,12 +107,14 @@ public class FtpAdapter extends RecyclerView.Adapter<FtpAdapter.ViewHolder> {
             mView = itemView.findViewById(R.id.text_view);
             mImage = itemView.findViewById(R.id.img_list);
             linear = itemView.findViewById(R.id.img_linear);
-            averageLength = glm.getWidth() / glm.getSpanCount();
+            int jg = UiUtil.dp2px(mContext, 5) * 5 + UiUtil.dp2px(mContext, 20);
+            averageLength = (glm.getWidth() - jg) / glm.getSpanCount();
         }
     }
 
     public interface OnItemClickListener {
         void onItemClick(View v, int position, FtpConfig fe);
+
         void onItemLongClick(View v, int position, FtpConfig fe);
     }
 

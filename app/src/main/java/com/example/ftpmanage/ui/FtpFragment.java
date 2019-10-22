@@ -104,7 +104,19 @@ public class FtpFragment extends Fragment {
     }
 
     public void loadFtpList() {
-        ftpList = FtpUtils.getFTPConfigList(db);
+        UiUtil.showProgressDialog(pd, "载入中", "载入中,请稍后...");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Message msg = new Message();
+                ftpList = FtpUtils.getFTPConfigList(db);
+                msg.what = 2;
+                handler.sendMessage(msg);
+            }
+        }).start();
+    }
+
+    public void showFtpList() {
         if (ftpList == null || ftpList.size() <= 0) {
             linearLayoutAddFtp.setVisibility(View.VISIBLE);
         } else {
@@ -185,6 +197,8 @@ public class FtpFragment extends Fragment {
                     int ftpConfigId = data.getInt("ftpConfigId");
                     Ftp_Fragments.showFtpFilesFragment("/", ftpConfigId);
                 }
+            } else if (msg.what == 2) {
+                showFtpList();
             } else if (msg.what == 9999) {
                 String errMessage = data.getString("errMessage");
                 UiUtil.showPosition(appCompatActivity, errMessage);

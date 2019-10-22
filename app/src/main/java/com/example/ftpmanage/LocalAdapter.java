@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.example.ftpmanage.entity.FileExt;
 import com.example.ftpmanage.utils.AppUtil;
 import com.example.ftpmanage.utils.ConstantUtil;
+import com.example.ftpmanage.utils.UiUtil;
 
 import java.util.List;
 
@@ -58,6 +59,9 @@ public class LocalAdapter extends RecyclerView.Adapter<LocalAdapter.ViewHolder> 
         final FileExt ffile = mList.get(position);
         String fname = ffile.getName();
         holder.mView.setText(fname);
+        ViewGroup.LayoutParams linearParm = holder.linear.getLayoutParams();
+        linearParm.width = averageLength;
+        linearParm.height = averageLength;
         if (!ffile.isDirectory()) {
             if (AppUtil.isExt(fname, ConstantUtil.IMAGE_ALL_SUFFIX_GATHER)) {
                 ViewGroup.LayoutParams imgParm = holder.mImage.getLayoutParams();
@@ -68,9 +72,6 @@ public class LocalAdapter extends RecyclerView.Adapter<LocalAdapter.ViewHolder> 
                 Glide.with(mContext).load(FtpUtils.getFileIcon(true, true, 0, fname)).into(holder.mImage);
             }
         } else {
-            if (ffile.getChildCount() < 0) {
-                ffile.setChildCount(ffile.getFileExtList().size());
-            }
             Glide.with(mContext).load(FtpUtils.getFileIcon(false, true, ffile.getChildCount(), fname)).into(holder.mImage);
         }
         holder.mImage.setOnClickListener(new View.OnClickListener() {
@@ -103,7 +104,8 @@ public class LocalAdapter extends RecyclerView.Adapter<LocalAdapter.ViewHolder> 
             mView = itemView.findViewById(R.id.text_view);
             mImage = itemView.findViewById(R.id.img_list);
             linear = itemView.findViewById(R.id.img_linear);
-            averageLength = glm.getWidth() / glm.getSpanCount();
+            int jg = UiUtil.dp2px(mContext, 5) * 5 + UiUtil.dp2px(mContext, 20);
+            averageLength = (glm.getWidth() - jg) / glm.getSpanCount();
         }
     }
 

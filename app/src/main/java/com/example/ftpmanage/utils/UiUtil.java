@@ -138,17 +138,41 @@ public class UiUtil {
         return false;
     }
 
-    public static void setMenuItemVisible(Toolbar toolbar, int itemId, boolean visible){
+    public static void setMenuItemVisible(Toolbar toolbar, int itemId, boolean visible) {
         Menu menu = toolbar.getMenu();
         MenuItem item = menu.findItem(itemId);
         item.setVisible(visible);
     }
 
-    public static void sleep(int t){
+    public static void sleep(int t) {
         try {
             Thread.sleep(t);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
+     *
+     * @param context
+     * @param dpValue
+     * @return
+     */
+    public static int dp2px(Context context, float dpValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
+
+    /**
+     * 根据手机的分辨率从 px(像素) 的单位 转成为 dp
+     *
+     * @param context
+     * @param pxValue
+     * @return
+     */
+    public static int px2dp(Context context, float pxValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (pxValue / scale + 0.5f);
     }
 }
