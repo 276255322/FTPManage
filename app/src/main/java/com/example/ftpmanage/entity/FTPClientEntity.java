@@ -15,6 +15,7 @@ import com.example.ftpmanage.utils.ConstantUtil;
 import com.example.ftpmanage.utils.FileProvider;
 import com.example.ftpmanage.utils.JsonUtil;
 import com.example.ftpmanage.utils.NetUtil;
+import com.tao.admin.loglib.Logger;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.sauronsoftware.ftp4j.FTPAbortedException;
+import it.sauronsoftware.ftp4j.FTPClient;
 import it.sauronsoftware.ftp4j.FTPDataTransferException;
 import it.sauronsoftware.ftp4j.FTPDataTransferListener;
 import it.sauronsoftware.ftp4j.FTPException;
@@ -93,6 +95,7 @@ public class FTPClientEntity {
     public static synchronized void createConnection(FtpConfig fc, Context context) {
         if (client == null) {
             client = new AppFTPClient(fc);
+            client.setType(FTPClient.TYPE_AUTO);
         } else {
             client.setError();
             if (client.getConnStatus() == 1) {
@@ -103,7 +106,7 @@ public class FTPClientEntity {
                         client.list();
                         return;
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Logger.e(e.toString());
                     }
                 }
             }
@@ -132,7 +135,7 @@ public class FTPClientEntity {
             client.setConnStatus(1);
         } catch (Exception e) {
             closeConnection();
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 1, e.getMessage());
             createMinorConnection(hpList);
         }
@@ -159,7 +162,7 @@ public class FTPClientEntity {
             return true;
         } catch (Exception e) {
             closeConnection();
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 1, e.getMessage());
         }
         return false;
@@ -200,19 +203,19 @@ public class FTPClientEntity {
             client.setConnStatus(1);
         } catch (IllegalStateException e) {
             closeConnection();
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 1, e.getMessage());
         } catch (IOException e) {
             closeConnection();
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 1, e.getMessage());
         } catch (FTPIllegalReplyException e) {
             closeConnection();
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 1, e.getMessage());
         } catch (FTPException e) {
             closeConnection();
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 1, e.getMessage());
         }
     }
@@ -238,8 +241,8 @@ public class FTPClientEntity {
                     client.setConnStatus(0);
                     return true;
                 } catch (Exception ex) {
-                    ex.printStackTrace();
-                    client.setError(String.valueOf(e.hashCode()), 2, e.getMessage());
+                    Logger.e(ex.toString());
+                    client.setError(String.valueOf(e.hashCode()), 2, ex.getMessage());
                     return false;
                 }
             }
@@ -262,16 +265,16 @@ public class FTPClientEntity {
             client.changeDirectory(path);
             client.createDirectory(name);
         } catch (IllegalStateException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 3, e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 3, e.getMessage());
         } catch (FTPIllegalReplyException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 3, e.getMessage());
         } catch (FTPException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 3, e.getMessage());
         }
     }
@@ -296,31 +299,31 @@ public class FTPClientEntity {
             File file = new File(localPath);
             client.upload(file, ftl);
         } catch (IllegalStateException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 4, e.getMessage());
             return false;
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 4, e.getMessage());
             return false;
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 4, e.getMessage());
             return false;
         } catch (FTPIllegalReplyException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 4, e.getMessage());
             return false;
         } catch (FTPException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 4, e.getMessage());
             return false;
         } catch (FTPDataTransferException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 4, e.getMessage());
             return false;
         } catch (FTPAbortedException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 4, e.getMessage());
             return false;
         }
@@ -344,35 +347,34 @@ public class FTPClientEntity {
             if (localfile.exists() && localfile.isFile()) {
                 FileProvider.deleteFile(localfile);
             }
-            client.setType(client.TYPE_BINARY);
             client.download(fpath, localfile, ftl);
             return true;
         } catch (IllegalStateException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 5, e.getMessage());
             return false;
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 5, e.getMessage());
             return false;
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 5, e.getMessage());
             return false;
         } catch (FTPIllegalReplyException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 5, e.getMessage());
             return false;
         } catch (FTPException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 5, e.getMessage());
             return false;
         } catch (FTPDataTransferException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 5, e.getMessage());
             return false;
         } catch (FTPAbortedException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 5, e.getMessage());
             return false;
         }
@@ -394,19 +396,19 @@ public class FTPClientEntity {
             client.deleteFile(ftpDir + fileName);
             return true;
         } catch (IllegalStateException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 6, e.getMessage());
             return false;
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 6, e.getMessage());
             return false;
         } catch (FTPIllegalReplyException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 6, e.getMessage());
             return false;
         } catch (FTPException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 6, e.getMessage());
             return false;
         }
@@ -434,25 +436,25 @@ public class FTPClientEntity {
             }
             return fexts;
         } catch (IllegalStateException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 7, e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 7, e.getMessage());
         } catch (FTPIllegalReplyException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 7, e.getMessage());
         } catch (FTPException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 7, e.getMessage());
         } catch (FTPDataTransferException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 7, e.getMessage());
         } catch (FTPAbortedException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 7, e.getMessage());
         } catch (FTPListParseException e) {
-            e.printStackTrace();
+            Logger.e(e.toString());
             client.setError(String.valueOf(e.hashCode()), 7, e.getMessage());
         }
         return null;
@@ -473,6 +475,7 @@ public class FTPClientEntity {
                     if (!sfile.exists()) {
                         Message msg = new Message();
                         Bundle data = new Bundle();
+                        //Logger.i("开始下载图片:" + savePath);
                         boolean isDown = FTPClientEntity.downFile(fName, sfile, null);
                         if (FTPClientEntity.client.isErr()) {
                             FileProvider.deleteFile(sfile);

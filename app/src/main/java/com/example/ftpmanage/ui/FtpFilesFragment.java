@@ -291,7 +291,6 @@ public class FtpFilesFragment extends Fragment implements FragmentBackHandler {
             public void run() {
                 FtpLock.unLock = false;
                 FTPClientEntity.downAllImages(appCompatActivity, filesAdapter, handler, localSaveDir);
-                //FTPClientEntity.loadAllFtpDirectory(filesAdapter, handler, ftpPath);
             }
         }).start();
     }

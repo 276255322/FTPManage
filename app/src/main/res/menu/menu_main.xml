@@ -4,4 +4,8 @@
         android:id="@+id/Menu_AddFtp"
         app:showAsAction="never"
         android:title="新增FTP"/>
+    <item
+        android:id="@+id/Menu_SeeLog"
+        app:showAsAction="never"
+        android:title="查看日志"/>
 </menu>

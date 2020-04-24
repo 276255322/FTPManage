@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ftpmanage.LogActivity;
 import com.example.ftpmanage.entity.FTPClientEntity;
 import com.example.ftpmanage.FtpAdapter;
 import com.example.ftpmanage.FtpEditActivity;
@@ -214,6 +215,10 @@ public class FtpFragment extends Fragment {
             int id = item.getItemId();
             if (id == R.id.Menu_AddFtp) {
                 Intent intent = new Intent(appCompatActivity, FtpEditActivity.class);
+                startActivity(intent);
+                return true;
+            }else if (id == R.id.Menu_SeeLog) {
+                Intent intent = new Intent(appCompatActivity, LogActivity.class);
                 startActivity(intent);
                 return true;
             }
